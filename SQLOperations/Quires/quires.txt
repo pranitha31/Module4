@@ -1,0 +1,41 @@
+
+//STEP1:CREATE A TABLE
+CREATE TABLE students (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    age INTEGER,
+    course TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+//STEP2 INSERT THE DATA
+INSERT INTO students (name, email, age, course)
+VALUES
+('Aarav Sharma', 'aarav.sharma@example.com', 21, 'Computer Science'),
+('Priya Reddy', 'priya.reddy@example.com', 19, 'Data Science'),
+('Rahul Verma', 'rahul.verma@example.com', 23, 'AI & ML'),
+('Sneha Iyer', 'sneha.iyer@example.com', 20, 'Cyber Security'),
+('Vikram Singh', 'vikram.singh@example.com', 25, 'Web Development'),
+('Meera Nair', 'meera.nair@example.com', 22, 'Cloud Computing'),
+('Karan Gupta', 'karan.gupta@example.com', 18, 'Computer Science');
+//STEP3 FETCH THE DATA
+SELECT * FROM students;
+SELECT * FROM students WHERE age > 20;
+SELECT name, email FROM students;
+SELECT * FROM students WHERE course = 'Computer Science';
+
+//STEP4 UPDATE THE DATA
+UPDATE students
+SET age = 24
+WHERE name = 'Rahul Verma';
+UPDATE students
+SET course = 'Software Engineering'
+WHERE course = 'Computer Science';
+
+//STEP5 DELETE DATA
+DELETE FROM students    
+WHERE id = 3;
+//DELETE THE students BELOW A CERTAIN AGE
+DELETE FROM students
+WHERE age < 20;
+
