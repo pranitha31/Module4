@@ -1,0 +1,79 @@
+###Step 1: Create Tables with Relationships###
+-- Create users table
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Create orders table with foreign key referencing users
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    amount INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+###Step 2: Insert Data###
+-- Insert 5 users
+INSERT INTO users (name, email) VALUES
+('Alice', 'alice@example.com'),
+('Bob', 'bob@example.com'),
+('Charlie', 'charlie@example.com'),
+('Diana', 'diana@example.com'),
+('Ethan', 'ethan@example.com');
+
+-- Insert 8–10 orders (ensure one user has multiple orders)
+INSERT INTO orders (user_id, amount, status) VALUES
+(1, 250, 'Pending'),
+(1, 300, 'Completed'),
+(2, 150, 'Pending'),
+(2, 200, 'Completed'),
+(3, 500, 'Shipped'),
+(4, 100, 'Pending'),
+(4, 120, 'Completed'),
+(5, 400, 'Shipped'),
+(5, 350, 'Completed'),
+(5, 600, 'Pending');
+###Step 3: Read Data (Relational Reads)###-- Fetch all users
+SELECT * FROM users;
+
+-- Fetch all orders
+SELECT * FROM orders;
+
+-- Fetch all orders for a specific user (example: user_id = 1)
+SELECT * FROM orders WHERE user_id = 1;
+
+-- Fetch users who have more than one order
+SELECT u.id, u.name, COUNT(o.id) AS order_count
+FROM users u
+JOIN orders o ON u.id = o.user_id
+GROUP BY u.id
+HAVING COUNT(o.id) > 1;
+
+-- Fetch total order amount per user
+SELECT u.id, u.name, SUM(o.amount) AS total_amount
+FROM users u
+JOIN orders o ON u.id = o.user_id
+GROUP BY u.id;
+###Step 4: Update Data###
+-- Update the email of one user (example: Bob)
+UPDATE users SET email = 'bob.new@example.com' WHERE id = 2;
+
+-- Update the status of all orders for a specific user (example: user_id = 5)
+UPDATE orders SET status = 'Delivered' WHERE user_id = 5;
+
+-- Update order amount for a single order (example: order_id = 3)
+UPDATE orders SET amount = 180 WHERE id = 3;
+###Step 5: Delete Data###
+-- Delete one order using order id (example: order_id = 4)
+DELETE FROM orders WHERE id = 4;
+
+-- Delete all orders of a specific user (example: user_id = 2)
+DELETE FROM orders WHERE user_id = 2;
+
+-- Attempt deleting a user with existing orders (example: user_id = 1)
+DELETE FROM users WHERE id = 1;
+-- Behavior: If ON DELETE CASCADE is set, all related orders will also be deleted.
+-- If not, deletion will fail due to foreign key constraint.
