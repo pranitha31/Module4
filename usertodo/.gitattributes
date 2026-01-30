@@ -1,0 +1,8 @@
+# Force text files to use LF line endings in repo
+* text=auto eol=lf
+
+# Keep JSON files consistent
+*.json text eol=lf
+
+# Keep JS files consistent
+*.js text eol=lf
